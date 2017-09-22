@@ -8,7 +8,7 @@ using namespace std;
 const int maxPath = 100000;
 
 
-bool CheckTop(int **Matr, int Num, int n, int sum=0) {
+bool CheckTop(int **Matr, int Num, int n, int & sum) {
 	//реализация алгоритма Дейкстры
 	/*Создание матрицы коротких путей*/
 	int *ShortPath = new int[n];
@@ -16,6 +16,7 @@ bool CheckTop(int **Matr, int Num, int n, int sum=0) {
 	int *Visited = new int[n];
 	//заполняем массивы посещенных вершин и коротких путей
 	int i;
+	sum = 0;
 	for (i = 0; i < n; i++) {
 		ShortPath[i] = maxPath;
 		Visited[i] = 0; //0 - не посещена, 1 - посещена
@@ -35,36 +36,48 @@ bool CheckTop(int **Matr, int Num, int n, int sum=0) {
 		Visited[top] = 1; //текущая вершина проверена
 
 		int min = maxPath;//ближайщая вершина
-		int top = -1; //вершина, которая будет выбрана текущей для следующего шага
-		for (int i = 0; i < n; i++) { //ищем непроверенную вершину с самым коротким путем
+		top = -1; //вершина, которая будет выбрана текущей для следующего шага
+		for (i = 0; i < n; i++) { //ищем непроверенную вершину с самым коротким путем
 			if (Visited[i] == 0 && ShortPath[i] < min) {
 				min = ShortPath[i];
 				top = i;
 			}
 		}
 
-	} while (top == -1); //все вершины проверены
+	} while (top != -1); //все вершины проверены
 	
 	
+	for (int j = 0; j < n; j++) {
+		cout << ShortPath[j] << "  " << Visited[j] << endl;
+	}
+	cout << endl;
+
+
 	i = 0;
 	while (i < n && ShortPath[i] < maxPath) {
 		sum += ShortPath[i];
 		i++;
 	}
-
+	cout << sum << endl;
+	
 	/*Удаление матрицы путей*/
 	delete[] ShortPath;
 	delete[] Visited;
-	
-	if (i==n) return true;
-	else
-	return false;
+
+	if (i == n) { 
+		cout << "true" << endl;
+		return true;
+	}
+	else {
+		cout << "false" << endl;
+		return false;
+	}
 
 }
 
 int main() {
 
-	
+	setlocale(LC_ALL, "Russian");
 	/*Создание динамической матрицы*/
 	int n;
 	cout << "Введите количество вершин" << endl;
@@ -80,20 +93,30 @@ int main() {
 	}
 
 	/*Ввод графа в матрицу*/
+	cout << "Введите веса ребeр между вершинами:" << endl;
 	for (int i = 0; i < n-1; i++) {
 		for (int j = i + 1; j < n; j++) {
 			int a;
-			cout << "Введите вес ребра между вершинами " << i+1 << "и " << j+1 << ", если ребра нет, введите 0" << endl;
+			cout <<  i+1 << " и " << j+1 << ", если ребра нет, введите 0." << endl;
 			cin >> a;
 			Graf[i][j] = a;
 			Graf[j][i] = a;
 		}
 	}
 
-	int sum=0, minsum = 0;
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			cout << Graf[i][j] << " ";
+		}
+		cout << endl;
+	}
+
+
+	int sum = 0, minsum = maxPath;
 	int SearchTop = -1;
 	for (int i = 0; i < n; i++) {
-		if (CheckTop(Graf, i, n, sum) && (minsum==0 || sum<minsum)) {
+		if (CheckTop(Graf, i, n, sum) &&  (sum < minsum)) {
+			cout << sum;
 			SearchTop = i;
 			minsum = sum;
 		}
@@ -103,7 +126,7 @@ int main() {
 		cout << "В графе нет медианы" << endl;
 	}
 	else
-		cout << "Медиана графа - вершина номер "<< SearchTop+1 << endl;
+		cout << "Медиана графа - вершина номер "<< SearchTop+1 << " "<< minsum <<endl;
 
 
 	/*Удаление матрицы из памяти*/
@@ -111,5 +134,24 @@ int main() {
 		delete[] Graf[i];
 	}
 	
+
+	/*
+	5
+	3
+	5
+	0
+	7
+	2
+	0
+	0
+	2
+	6
+	4
+	
+		
+	*/
+
+
+
 	return 0;
 }
