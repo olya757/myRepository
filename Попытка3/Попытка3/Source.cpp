@@ -46,11 +46,6 @@ bool CheckTop(int **Matr, int Num, int n, int & sum) {
 
 	} while (top != -1); //все вершины проверены
 	
-	
-	for (int j = 0; j < n; j++) {
-		cout << ShortPath[j] << "  " << Visited[j] << endl;
-	}
-	cout << endl;
 
 
 	i = 0;
@@ -58,20 +53,15 @@ bool CheckTop(int **Matr, int Num, int n, int & sum) {
 		sum += ShortPath[i];
 		i++;
 	}
-	cout << sum << endl;
-	
+		
 	/*Удаление матрицы путей*/
 	delete[] ShortPath;
 	delete[] Visited;
 
-	if (i == n) { 
-		cout << "true" << endl;
-		return true;
-	}
-	else {
-		cout << "false" << endl;
-		return false;
-	}
+	if (i == n) return true;
+	//else
+	return false;
+	
 
 }
 
@@ -103,7 +93,7 @@ int main() {
 			Graf[j][i] = a;
 		}
 	}
-
+	//вывод графа
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++) {
 			cout << Graf[i][j] << " ";
@@ -111,12 +101,11 @@ int main() {
 		cout << endl;
 	}
 
-
+	//проверяем каждую вершину и если от нее есть пути во все остальные, сравниваем сумму этих путей с минимумом, запоминая вершину
 	int sum = 0, minsum = maxPath;
 	int SearchTop = -1;
 	for (int i = 0; i < n; i++) {
 		if (CheckTop(Graf, i, n, sum) &&  (sum < minsum)) {
-			cout << sum;
 			SearchTop = i;
 			minsum = sum;
 		}
@@ -126,7 +115,7 @@ int main() {
 		cout << "В графе нет медианы" << endl;
 	}
 	else
-		cout << "Медиана графа - вершина номер "<< SearchTop+1 << " "<< minsum <<endl;
+		cout << "Медиана графа - вершина номер "<< SearchTop+1 << ", сумма - "<< minsum <<endl;
 
 
 	/*Удаление матрицы из памяти*/
