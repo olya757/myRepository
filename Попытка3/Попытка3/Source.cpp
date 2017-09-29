@@ -257,7 +257,7 @@ int main() {
 		char FileName[20];
 		if (InputFileName("Введите имя файла", FileName, true)) {
 			ifstream fin(FileName);
-			
+
 			fin >> n;
 			Graf = new int*[n];
 			for (int i = 0; i < n; i++) {
@@ -268,16 +268,26 @@ int main() {
 				Graf[i][i] = 0;
 
 			}
-			for (int i = 0; i < n - 1; i++) {
-				for (int j = i + 1; j < n; j++) {
+			int i = 0, j = 0;
+			while (i < n - 1 && !fin.eof()) {
+				j = i + 1;
+				while (j < n  && !fin.eof()) {
 					int a;
 					fin >> a;
 					Graf[i][j] = a;
 					Graf[j][i] = a;
+					j++;
 				}
+				i++;
 			}
-
+			if (i < n - 1) {
+				cout << "В файле недостаточно данных" << endl;
+				return 0;
+			}
+			fin.close();
 		}
+		else
+			return 0;
 	}
 
 	//вывод графа
