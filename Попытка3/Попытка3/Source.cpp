@@ -9,6 +9,7 @@ using namespace std;
 
 const int maxPath = 100000;
 
+
 struct TFileInfo { //структура содержит файловую переменную и имя файла
 	FILE *f;
 	char FileName[20];
@@ -21,13 +22,13 @@ bool CheckTop(int **Matr, int Num, int n, int & sum) {
 	/*Создание матрицы коротких путей*/
 	int *ShortPath = new int[n];
 	/*Создание матрицы посещенных вершин*/
-	int *Visited = new int[n];
+	bool *Visited = new bool[n];
 	//заполняем массивы посещенных вершин и коротких путей
 	int i;
 	sum = 0;
 	for (i = 0; i < n; i++) {
 		ShortPath[i] = maxPath;
-		Visited[i] = 0; //0 - не посещена, 1 - посещена
+		Visited[i] = false; //0 - не посещена, 1 - посещена
 	}
 	ShortPath[Num] = 0; //короткий путь до исходной вершины - 0
 	
@@ -37,16 +38,16 @@ bool CheckTop(int **Matr, int Num, int n, int & sum) {
 	{
 		i = 0;
 		for (; i < n; i++) {//если новая вершина не текущая и не была посещена и расстояние до неё из исходной короче, чем было
-			if (i != top && Visited[i] == 0 && Matr[i][top]>0 && ShortPath[top] + Matr[i][top] < ShortPath[i]) {
+			if (i != top && !Visited[i] && Matr[i][top]>0 && ShortPath[top] + Matr[i][top] < ShortPath[i]) {
 				ShortPath[i] = ShortPath[top] + Matr[i][top];//обновляем длину пути к вершине i
 			}
 		}
-		Visited[top] = 1; //текущая вершина проверена
+		Visited[top] = true; //текущая вершина проверена
 
 		int min = maxPath;//ближайщая вершина
 		top = -1; //вершина, которая будет выбрана текущей для следующего шага
 		for (i = 0; i < n; i++) { //ищем непроверенную вершину с самым коротким путем
-			if (Visited[i] == 0 && ShortPath[i] < min) {
+			if (!Visited[i] && ShortPath[i] < min) {
 				min = ShortPath[i];
 				top = i;
 			}
@@ -206,9 +207,24 @@ bool InputFileName(char *txt, char *FileName, bool MustExist) { //ввод имени фай
 		return check; //сохраняем результат
 }
 
+int **CreateGraf(int n) {
+	int **Graf = new int*[n];
+	for (int i = 0; i < n; i++) {
+		Graf[i] = new int[n];
+	}
 
+	for (int i = 0; i < n; i++) {
+		Graf[i][i] = 0;
 
-
+	}
+	return Graf;
+}
+bool AddElem(int **Matr, int a, int i, int j) {
+	if (a < 0) return false;
+	Matr[i][j] = a;
+	Matr[j][i] = a;
+	return true;
+}
 
 
 
@@ -230,25 +246,18 @@ int main() {
 		
 		cout << "Введите количество вершин" << endl;
 		cin >> n;
-		Graf = new int*[n];
-		for (int i = 0; i < n; i++) {
-			Graf[i] = new int[n];
-		}
-
-		for (int i = 0; i < n; i++) {
-			Graf[i][i] = 0;
-
-		}
-
+		
+		Graf = CreateGraf(n);
 		/*Ввод графа в матрицу*/
 		cout << "Введите веса ребeр между вершинами:" << endl;
 		for (int i = 0; i < n - 1; i++) {
 			for (int j = i + 1; j < n; j++) {
 				int a;
 				cout << i + 1 << " и " << j + 1 << ", если ребра нет, введите 0." << endl;
-				cin >> a;
-				Graf[i][j] = a;
-				Graf[j][i] = a;
+				do{
+					cin >> a;
+				}while (!AddElem(Graf,a,i,j));
+
 			}
 		}
 	}
@@ -257,34 +266,29 @@ int main() {
 		char FileName[20];
 		if (InputFileName("Введите имя файла", FileName, true)) {
 			ifstream fin(FileName);
-
 			fin >> n;
-			Graf = new int*[n];
-			for (int i = 0; i < n; i++) {
-				Graf[i] = new int[n];
-			}
-
-			for (int i = 0; i < n; i++) {
-				Graf[i][i] = 0;
-
-			}
+			//Graf = new int*[n];
+			Graf = CreateGraf( n);
+			bool ok = true;
 			int i = 0, j = 0;
-			while (i < n - 1 && !fin.eof()) {
+			while (i < n - 1 && !fin.eof() && ok) {
 				j = i + 1;
-				while (j < n  && !fin.eof()) {
+				while (j < n  && !fin.eof() && ok) {
 					int a;
 					fin >> a;
-					Graf[i][j] = a;
-					Graf[j][i] = a;
+					ok = (AddElem(Graf, a, i, j));
 					j++;
 				}
 				i++;
 			}
 			if (i < n - 1) {
 				cout << "В файле недостаточно данных" << endl;
-				return 0;
+				ok = false;
 			}
 			fin.close();
+			if (!ok) 
+				return 0;
+
 		}
 		else
 			return 0;
