@@ -25,7 +25,16 @@ private:
 		'0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
 		'0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'};
 	
-	
+	Nex Ost(Nex a, Nex b, int p) {
+		Nex copya = a;
+		Nex D;
+		while (MoreOrEqualThan(copya, b)) {
+			copya = Diff(copya, b);
+			D = Summ(D, one);
+		}
+		if (p == 0) return D;
+		return copya;
+	}
 public:
 	Nex() {
 		setNex(zero);
@@ -169,8 +178,25 @@ public:
 		return res;
 
 	}
+	
+	Nex Div(Nex a, Nex b) {
+		return Ost(a,b,0);
+	}
 
+	Nex Mod(Nex a, Nex b) {
+		return Ost(a, b, 1);
+	}
 
+	Nex Mult(Nex a, Nex b) {
+		Nex copya = a;
+		Nex res;
+		for (; MoreThan(copya, zero); copya = Diff(copya, one)) {
+			res = Summ(res, b);
+		}
+		return res;
+	}
+
+	
 
 };
 
