@@ -56,10 +56,10 @@ public:
 		for (; i <=j; i++) {
 			number[i] = s[s.length() - i - 1];
 		}
-		for (int j = i; j < 99; j++) {
+		for (int j = i; j < 100; j++) {
 			number[j] = '0';
 		}
-		number[99] = '\0';
+		
 	}
 
 	int NexToDec(Hex a) {
