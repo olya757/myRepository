@@ -8,3 +8,12 @@
 *.vcxproj
 *.filters
 *.sln
+*.tlog
+/Задача2/Debug/Задача2.ilk
+/Задача2/Debug/Задача2.pdb
+*.exe
+*.log
+*.pdb
+*.idb
+*.enc
+*.obj
