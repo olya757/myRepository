@@ -21,13 +21,17 @@ int NumOfLet(char c) {
 }
 
 
-
 class Hex {
 	
 public:
 	unsigned char number[100];
+	
 	Hex(unsigned char num[100]=zero) {
 		Init(num);
+	}
+	
+	Hex(string s) {
+		Init(s);
 	}
 
 	int size() {
@@ -42,7 +46,21 @@ public:
 
 	}
 	
-	
+	void Init(string s) {
+		int i = 0;
+		int j = 0;
+		for (; j < s.length() && s[j] == ' '; j++);
+		i = j;
+		j = s.length() - 1;
+		for (; j >=0 && s[j] == ' '; j--);
+		for (; i <=j; i++) {
+			number[i] = s[s.length() - i - 1];
+		}
+		for (int j = i; j < 99; j++) {
+			number[j] = '0';
+		}
+		number[99] = '\0';
+	}
 
 	int NexToDec(Hex a) {
 		int res = 0;
@@ -63,21 +81,9 @@ public:
 	}
 
 	void Read() {
-		unsigned char m[100];
 		string s;
 		cin >>  s;
-		int i = 0;
-		for (; i < s.length(); i++) {
-			m[i] = s[s.length()-i-1];
-		}
-		for (int j = i; j < 99; j++) {
-			m[j] = '0';
-		}
-		m[99] = '\0';
-		Init(m);
-		
-			
-		
+		Init(s);
 	}
 
 	string ToString() {
@@ -97,6 +103,8 @@ public:
 
 };
 
+Hex Zero;
+Hex One(one);
 bool isEqual(Hex a, Hex b) {
 	if (a.size() != b.size()) return false;
 	int i = 0;
@@ -212,15 +220,18 @@ Hex Diff(Hex a, Hex b) {
 }
 
 Hex Ost(Hex a, Hex b, int p) {
-
-	Hex copya = a;
-	Hex D;
-	while (MoreOrEqualThan(copya, b)) {
-		copya = Diff(copya, b);
-		D = Summ(D, one);
+	if (!isEqual(b, Zero)) {
+		Hex copya = a;
+		Hex D;
+		while (MoreOrEqualThan(copya, b)) {
+			copya = Diff(copya, b);
+			D = Summ(D, One);
+		}
+		if (p == 0) return D;
+		return copya;
 	}
-	if (p == 0) return D;
-	return copya;
+	else
+		return Zero;
 }
 
 Hex Div(Hex a, Hex b) {
@@ -241,7 +252,7 @@ Hex Mult(Hex a, Hex b) {
 	}
 
 	Hex res;
-	for (; MoreThan(minn, zero); minn = Diff(minn, one)) {
+	for (; MoreThan(minn, zero); minn = Diff(minn, One)) {
 		res = Summ(res, maxx);
 	}
 	return res;
