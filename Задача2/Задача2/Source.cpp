@@ -1,67 +1,60 @@
+#include "Hex.h"
 #include <iostream>
 #include <string>
-#include "Hex.h"
 
+
+/*Задание: реализовать операции с целыми неотрицательными шестнадцатеричными числами, представить их в виде массива 
+из 100 беззнаковых символов*/
 using namespace std;
 
-int Task(Hex a, Hex b) {
-	a.Read();
-	if (!a.isCorrect()) {
-		cout << "Некорректное значение";
-		return 0;
-	}
-	b.Read();
-	if (!b.isCorrect()) {
-		cout << "Некорректное значение";
-		return 0;
-	}
-	Hex aSumm, aDiff1, aDiff2, aDiv1, aDiv2, aMod1, aMod2, aMult;
-	
-	aSumm = Summ(a, b);
-	a.Display(" + "); b.Display(" = ");
-	aSumm.Display("\n");
-
-	aDiff1 = Diff(a, b);
-	a.Display(" - "); b.Display(" = ");
-	aDiff1.Display("\n");
-
-	aDiff2 = Diff(b, a);
-	b.Display(" - "); a.Display(" = ");
-	aDiff2.Display("\n");
-
-	
-	aDiv1 = Div(a, b);
-	a.Display(" div "); b.Display(" = ");
-	aDiv1.Display("\n");
-	
-	
-	aDiv2 = Div(b, a);
-	b.Display(" div "); a.Display(" = ");
-	aDiv2.Display("\n");
-	
-	
-	aMod1 = Mod(a, b);
-	a.Display(" mod "); b.Display(" = ");
-	aMod1.Display("\n");
-	
-	aMod2 = Mod(b, a);
-	b.Display(" mod "); a.Display(" = ");
-	aMod2.Display("\n");
-	
-
-	aMult = Mult(a, b);
-	a.Display(" * "); b.Display(" = ");
-	aMult.Display("\n");
-	return 0;
+//меню
+int Menu() {
+	cout << "1 - Сложить" << endl;
+	cout << "2 - Вычесть" << endl;
+	cout << "3 - Разделить" << endl;
+	cout << "4 - Умножить" << endl;
+	cout << "5 - Вычислить остаток от деления" << endl;
+	int n;
+	cin >> n ;
+	return n;
 }
-
 
 
 int main() {
 	setlocale(LC_ALL, "Russian");
 	cout << "Введите два шестнадцатеричных числа" << endl;
 	Hex a, b;
+	a.Read();
+	if (!a.isCorrect()) {
+		cout << "Некорректное значение" << endl;
+		getchar();
+		getchar();
+		return 0;
+	}
+	b.Read();
+	if (!b.isCorrect()) {
+		cout << "Некорректное значение"<<endl;
+		getchar();
+		getchar();
+		return 0;
+	}
+	Hex res;
+	int n = Menu();
+	switch (n) 
+	{
+	case 1:res = a + b;  break;
+	case 2: res = a - b;  break;
+	case 3: res = a / b;  break;
+	case 4: res = a * b;  break;
+	case 5: res = Mod(a, b);  break;
+	default: cout << "Неверно введен оператор" << endl;
+		getchar();
+		getchar();
+		return 0;
+	}
+	res.Display();
+	getchar();
+	getchar();
 	
-	return Task(a,b);
-	
+	return 0;
 }
