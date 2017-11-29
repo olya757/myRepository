@@ -252,17 +252,15 @@ Hex Hex::operator * (Hex b) {
 	return res;
 }
 
-Hex Hex::operator ++(int) {
-	Hex temp = *this;
+void Hex::operator ++(int) {
 	Hex One(one);
-	temp= temp + One;
-	return temp;
+	*this = *this + One;
+	
 }
-Hex Hex::operator --(int) {
-	Hex temp = *this;
+void Hex::operator --(int) {
 	Hex One(one);
-	temp = temp - One;
-	return temp;
+	*this = *this - One;
+
 }
 
 ostream& operator<<(ostream& os, Hex& hex)

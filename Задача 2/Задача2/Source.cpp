@@ -6,7 +6,6 @@
 /*Задание: реализовать операции с целыми неотрицательными шестнадцатеричными числами, представить их в виде массива 
 из 100 беззнаковых символов*/
 using namespace std;
-
 //меню
 int Menu() {
 	cout << "1 - Сложить" << endl;
@@ -31,6 +30,7 @@ int main() {
 		getchar();
 		return 0;
 	}
+	
 	b.Read();
 	if (!b.isCorrect()) {
 		cout << "Некорректное значение"<<endl;
@@ -42,7 +42,7 @@ int main() {
 	int n = Menu();
 	switch (n) 
 	{
-	case 1:res = a ++;  break;
+	case 1:a++; res = a;  break;
 	case 2: res = a - b;  break;
 	case 3: res = a / b;  break;
 	case 4: res = a * b;  break;
@@ -55,6 +55,8 @@ int main() {
 	res.Display();
 	getchar();
 	getchar();
+	
+
 	
 	return 0;
 }

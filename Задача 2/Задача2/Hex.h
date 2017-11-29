@@ -54,8 +54,8 @@ public:
 	Hex operator / (Hex b);
 	//умножение
 	Hex operator * (Hex b);
-	Hex operator ++(int);
-	Hex operator --(int);
+	void operator ++(int);
+	void operator --(int);
 
 	friend ostream& operator<<(ostream& os, Hex& hex);
 };

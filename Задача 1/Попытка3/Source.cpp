@@ -10,11 +10,7 @@ using namespace std;
 const int maxPath = 100000;
 
 
-struct TFileInfo { //структура содержит файловую переменную и имя файла
-	FILE *f;
-	char FileName[20];
 
-};
 
 
 bool CheckTop(int **Matr, int Num, int n, int & sum) {

@@ -6,10 +6,11 @@ template <class T> class Deque
 {
 private:
 	Node<T> * Head;
-	Node<T> * Tall;
+	Node<T> * Tail;
 	int cnt;
 public:
 	Deque();
+	~Deque();
 	bool IsEmpty();
 	int Count();
 	void PushBack(T info);
@@ -26,9 +27,17 @@ public:
 template <class T>
 Deque<T>::Deque()
 {
-	Head = NULL;
-	Tall = NULL;
 	cnt = 0;
+}
+
+template <class T>
+Deque<T>::~Deque() {
+	Node<T> * tmp1;
+	while (Head != NULL) {
+		tmp1 = Head;
+		Head = Head->next;
+		delete tmp1;
+	}
 }
 
 template <class T>
@@ -48,15 +57,15 @@ void Deque<T>::PushBack(T info)
 {
 	if (cnt == 0) {
 		Head = new Node<T>(info);
-		Tall = Head;
+		Tail = Head;
 		cnt++;
 	}
 	else
 	{	
 		Node<T> * el = new Node<T>(info);
-		el->pred = Tall;
-		Tall->next = el;
-		Tall = el;
+		el->pred = Tail;
+		Tail->next = el;
+		Tail = el;
 		cnt++;
 	}
 }
@@ -66,7 +75,7 @@ void Deque<T>::PushInFront(T info)
 {
 	if (cnt == 0) {
 		Head = new Node<T>(info);
-		Tall = Head;
+		Tail = Head;
 		cnt++;
 	}
 	else {
@@ -81,54 +90,90 @@ void Deque<T>::PushInFront(T info)
 template <class T>
 T Deque<T>::PopFromBack()
 {
-	if (cnt!=0) {
-		T info;
-		Node *el = Tall;
-		info = el->info;
-		Tall = Tall->pred;
-		delete el;
-		cnt--;
-		return info;
+	try {
+		if (cnt == 1) {
+			cnt--; 
+			T info = Head->info;
+			delete Head;
+			Tail = NULL; 
+			return info;
+		}
+		else {
+			T info;
+			Node<T> *el = Tail;
+			info = el->info;
+			Tail = Tail->pred;
+			Tail->next = NULL;
+			delete el;
+			cnt--;
+			return info;
+		}
 
 	}
-	else
-		_raise __EXCEPTIONS("Очередь пуста");
+	catch (int) 
+	{
+		runtime_error("Очередь пуста");
+		getchar();
+		getchar();
+	}
 }
 
 template <class T>
 T Deque<T>::PopFromFront()
 {
-	if (cnt!=0) {
-		T info;
-		Node *el = Head;
-		info = el->info;
-		Head = Head->next;
-		delete el;
-		cnt--;
-		return info;
+	try {
+		if (cnt == 1) {
+			cnt--;
+			T info = Head->info;
+			delete Head;
+			Tail = NULL;
+			return info;
+		}
+		else {
+			T info;
+			Node<T> *el = Head;
+			info = el->info;
+			Head = Head->next;
+			Head->pred = NULL;
+			delete el;
+			cnt--;
+			return info;
+		}
 	}
-	else
-		_raise __EXCEPTIONS("Очередь пуста");
+	catch (int) 
+	{
+		runtime_error("Очередь пуста");
+		getchar();
+		getchar();
+	}
 }
 
 template <class T>
 T Deque<T>::TopFromBack() {
-	if (!IsEmpty()) {
-		T info = Tall->info;
+	try {
+		T info = Tail->info;
 		return info;
 	}
-	else
-		_raise __EXCEPTIONS("Очередь пуста");
+	catch (int)
+	{
+		runtime_error("Очередь пуста");
+		getchar();
+		getchar();
+	}
 }
 
 template <class T>
 T Deque<T>::TopFromFront() {
-	if (!IsEmpty()) {
+	try {
 		T info = Head->info;
 		return info;
 	}
-	else
-		_raise __EXCEPTIONS("Очередь пуста");
+	catch (int)
+	{
+		runtime_error("Очередь пуста");
+		getchar();
+		getchar();
+	}
 }
 
 template <class T>

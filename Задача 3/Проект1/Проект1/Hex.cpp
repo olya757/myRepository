@@ -1,13 +1,12 @@
 #include "Hex.h"
-#include "Hex.h"
 
-const unsigned char let[17] = "0123456789abcdef";
-const unsigned char one[100] = { '1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+unsigned char let[17] = "0123456789abcdef";
+unsigned char one[100] = { '1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
 '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
 '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
 '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
 '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '\0' };
-const unsigned char zero[100] = { '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+unsigned char zero[100] = { '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
 '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
 '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
 '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
@@ -18,10 +17,13 @@ int NumOfLet(char c) {
 	if (c >= 'A' && c <= 'Z') return (int)c - (int)'A' + 10;
 }
 
-Hex::Hex(const unsigned char num[100]) {
+Hex::Hex(unsigned char num[100]) {
 	Init(num);
 }
-
+//объявление через строку
+Hex::Hex(string s) {
+	Init(s);
+}
 //возвращает длину числа
 int Hex::size() {
 	int j = 98;
@@ -29,13 +31,39 @@ int Hex::size() {
 	return j + 1;
 }
 //инициализация через массив символов 
-void Hex::Init(const unsigned char num[100]) {
-	for (int i = 0; i<100; i++)
-		number[i] = num[i];
+void Hex::Init(unsigned char num[100]) {
+	for (int i = 0; i < 100; i++) {
+		char c = num[i];
+		if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'))
+			number[i] = num[i];
+		else
+			exception("Неверный формат");
+	}
+
 	Size = size();
 
 }
+//инициализация через строку
+void Hex::Init(string s) {
+	int i = 0;
+	int j = 0;
+	int len = s.length();
+	for (; j < len && s[j] == ' '; j++);
+	i = j;
+	j = len - 1;
+	for (; j >= 0 && s[j] == ' '; j--);
 
+	for (; i <= j; i++) {
+		
+		number[i] = s[len - i - 1];
+		
+	}
+	for (int j = i; j < 100; j++) {
+		number[j] = '0';
+	}
+	Size = size();
+
+}
 //перевод в десятичное
 int Hex::NexToDec() {
 	int res = 0;
@@ -61,6 +89,8 @@ void Hex::Read() {
 	cin >> s;
 	Init(s);
 }
+
+
 //перевод в вид строки
 string Hex::ToString() {
 	string s = "";
@@ -76,7 +106,7 @@ void Hex::Display(string str) {
 	cout << ToString() << str;
 }
 
-//определяет равно ли 
+//определяет равно ли !!!!!!!!!!!!
 bool Hex::operator == (Hex b) {
 	if (Size != b.Size) return false;
 	int i = 0;
@@ -232,29 +262,38 @@ Hex Hex::operator * (Hex b) {
 	return res;
 }
 
-Hex Hex::operator++(int)
-{
+void Hex::operator ++(int) {
 	Hex One(one);
-	Hex temp = *this;
-	temp=temp+One;
-	return temp;
+	*this = *this + One;
+	
 }
-Hex Hex::operator --(int) {
-	Hex *tmp = *this;
+void Hex::operator --(int) {
 	Hex One(one);
-	tmp = tmp - One;
-	return tmp;
+	*this = *this - One;
+
 }
 
-ostream& operator<<(ostream& os, const Hex& hex)
+
+
+
+ostream& operator<<(ostream& os, Hex& hex)
 {
 	os << hex.ToString();
 	return os;
 }
 
-
-
-
+bool operator >> (istream& is, Hex& hex)
+{
+	string s;
+	is >> s;
+	hex.Init(s);
+	if (hex.isCorrect())
+		return true;
+	else
+	{
+		return false;
+	}
+}
 
 
 Hex Mod(Hex a, Hex b) {
